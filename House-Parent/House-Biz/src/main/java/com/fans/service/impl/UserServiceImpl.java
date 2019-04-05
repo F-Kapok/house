@@ -8,6 +8,7 @@ import com.fans.utils.BeanHelper;
 import com.fans.utils.FileUtils;
 import com.fans.utils.HashUtils;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private FileUtils fileUtils;
     @Resource(name = "mailService")
     private MailService mailService;
+    @Value(value = "${file.prefix}")
+    private String filePrefix;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -49,6 +52,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean enable(String key) {
         return mailService.enable(key);
+    }
+
+    @Override
+    public User auth(String username, String password) {
+        User user = new User();
+        user.setEmail(username);
+        user.setPasswd(HashUtils.encryPassword(password));
+        user.setEnable(1);
+        List<User> userList = getUserByQuery(user);
+        if (!userList.isEmpty()) {
+            return userList.get(0);
+        }
+        return null;
+    }
+
+    private List<User> getUserByQuery(User user) {
+        List<User> userList = userMapper.query(user);
+        userList.forEach(u -> {
+            u.setAvatar(filePrefix + u.getAvatar());
+        });
+        return userList;
     }
 
 }

@@ -23,6 +23,46 @@
         from user
         where id = #{id,jdbcType=BIGINT}
     </select>
+    <select id="query" resultType="com.fans.model.User">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        <where>
+            <if test="id != null">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and `name` = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="phone != null">
+                and phone = #{phone,jdbcType=CHAR}
+            </if>
+            <if test="email != null">
+                and email = #{email,jdbcType=VARCHAR}
+            </if>
+            <if test="aboutme != null">
+                and aboutme = #{aboutme,jdbcType=VARCHAR}
+            </if>
+            <if test="passwd != null">
+                and passwd = #{passwd,jdbcType=VARCHAR}
+            </if>
+            <if test="avatar != null">
+                and avatar = #{avatar,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null">
+                and `type` = #{type,jdbcType=BIT}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=DATE}
+            </if>
+            <if test="enable != null">
+                and enable = #{enable,jdbcType=BIT}
+            </if>
+            <if test="agencyId != null">
+                and agency_id = #{agencyId,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user
     where id = #{id,jdbcType=BIGINT}

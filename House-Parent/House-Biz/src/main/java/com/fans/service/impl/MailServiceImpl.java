@@ -3,6 +3,7 @@ package com.fans.service.impl;
 import com.fans.mapper.UserMapper;
 import com.fans.model.User;
 import com.fans.service.interfaces.MailService;
+import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,7 +41,15 @@ public class MailServiceImpl implements MailService {
             .removalListener(new RemovalListener<String, String>() {
                 @Override
                 public void onRemoval(RemovalNotification<String, String> notification) {
-                    userMapper.deleteByEmail(notification.getValue());
+                    String email = notification.getValue();
+                    User user = new User();
+                    user.setEmail(email);
+                    List<User> targetUser = userMapper.query(user);
+                    if (!targetUser.isEmpty() && Objects.equal(targetUser.get(0).getEnable(), 0)) {
+                        // 代码优化: 在删除前首先判断用户是否已经被激活，对于未激活的用户进行移除操作
+                        userMapper.deleteByEmail(email);
+                    }
+
                 }
             }).build();
 

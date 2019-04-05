@@ -1,5 +1,6 @@
 package com.fans.controller;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,5 +17,10 @@ public class PageController {
     @RequestMapping("/index")
     public ModelAndView showIndex() {
         return new ModelAndView("/homepage/index");
+    }
+
+    @RequestMapping("/error/{page}")
+    public ModelAndView toPage(@PathVariable String page) {
+        return new ModelAndView("/error/" + page);
     }
 }

@@ -3,6 +3,8 @@ package com.fans.controller;
 import com.fans.model.User;
 import com.fans.result.ResultMsg;
 import com.fans.service.interfaces.UserService;
+import com.fans.utils.WebInitialize;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName UserController
@@ -51,5 +55,49 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/accounts/signin")
+    public ModelAndView signIn() {
+        WebInitialize webInitialize = new WebInitialize().invoke();
+        ModelAndView model = new ModelAndView();
+        HttpServletRequest request = webInitialize.getRequest();
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String target = request.getParameter("target");
+        //如果登陆名或者密码为空则跳转登陆页
+        if (username == null || password == null) {
+            request.setAttribute("target", target);
+            model.setViewName("/user/accounts/signin");
+            return model;
+        }
+        User user = userService.auth(username, password);
+        if (user == null) {
+            String viewName = "redirect:/account/singnin?"
+                    .concat("target=")
+                    .concat(target)
+                    .concat("&username=")
+                    .concat(username)
+                    .concat("&")
+                    .concat(ResultMsg.errorMsg("用户名密码错误").asUrlParams());
+            model.setViewName(viewName);
+        } else {
+            HttpSession session = webInitialize.getSession();
+            session.setAttribute("loginUser", user);
+            session.setAttribute("user", user);
+            if (StringUtils.isNotBlank(target)) {
+                model.setViewName("redirect:".concat(target));
+            } else {
+                model.setViewName("redirect:/index");
+            }
+        }
+        return model;
+    }
 
+    @RequestMapping(value = "/accounts/logout")
+    public ModelAndView logout() {
+        WebInitialize webInitialize = new WebInitialize().invoke();
+        HttpSession session = webInitialize.getSession();
+        session.invalidate();
+        return new ModelAndView("redirect:/index");
+    }
 }
+

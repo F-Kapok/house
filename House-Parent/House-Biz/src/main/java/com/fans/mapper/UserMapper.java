@@ -2,6 +2,8 @@ package com.fans.mapper;
 
 import com.fans.model.User;
 
+import java.util.List;
+
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -18,4 +20,7 @@ public interface UserMapper {
     int deleteByEmail(String value);
 
     int updateByEmailSelective(User user);
+
+    List<User> query(User user);
+
 }

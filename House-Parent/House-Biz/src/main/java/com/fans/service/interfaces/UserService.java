@@ -14,4 +14,6 @@ public interface UserService {
     boolean addAccount(User user);
 
     boolean enable(String key);
+
+    User auth(String username, String password);
 }
