@@ -67,11 +67,17 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private List<User> getUserByQuery(User user) {
+    @Override
+    public void updateUser(User updateUser, String email) {
+        updateUser.setEmail(email);
+        BeanHelper.onUpdate(updateUser);
+        userMapper.update(updateUser);
+    }
+
+    @Override
+    public List<User> getUserByQuery(User user) {
         List<User> userList = userMapper.query(user);
-        userList.forEach(u -> {
-            u.setAvatar(filePrefix + u.getAvatar());
-        });
+        userList.forEach(u -> u.setAvatar(filePrefix + u.getAvatar()));
         return userList;
     }
 

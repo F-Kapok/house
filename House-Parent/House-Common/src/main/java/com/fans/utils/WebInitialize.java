@@ -30,7 +30,7 @@ public class WebInitialize {
         assert attributes != null;
         request = attributes.getRequest();
         response = attributes.getResponse();
-        session = request.getSession();
+        session = request.getSession(true);
         return this;
     }
 }

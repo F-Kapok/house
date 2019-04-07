@@ -28,6 +28,7 @@ spring:
       datetime_format: yyyy-MM-dd HH:mm:ss
       default_encoding: UTF-8
       auto_import: common/common.ftl as common
+    allow-session-override: true
   mail:
     host: smtp.163.com
     username: 13691824094@163.com

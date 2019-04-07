@@ -1,20 +1,25 @@
 package com.fans.controller;
 
+import com.fans.common.CommonConstants;
 import com.fans.model.User;
 import com.fans.result.ResultMsg;
 import com.fans.service.interfaces.UserService;
+import com.fans.utils.HashUtils;
 import com.fans.utils.WebInitialize;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName UserController
@@ -71,7 +76,7 @@ public class UserController {
         }
         User user = userService.auth(username, password);
         if (user == null) {
-            String viewName = "redirect:/account/singnin?"
+            String viewName = "redirect:/accounts/signin?"
                     .concat("target=")
                     .concat(target)
                     .concat("&username=")
@@ -81,8 +86,8 @@ public class UserController {
             model.setViewName(viewName);
         } else {
             HttpSession session = webInitialize.getSession();
-            session.setAttribute("loginUser", user);
-            session.setAttribute("user", user);
+            session.setAttribute(CommonConstants.USER_ATTRIBUTE, user);
+            session.setAttribute(CommonConstants.PLAIN_USER_ATTRIBUTE, user);
             if (StringUtils.isNotBlank(target)) {
                 model.setViewName("redirect:".concat(target));
             } else {
@@ -98,6 +103,43 @@ public class UserController {
         HttpSession session = webInitialize.getSession();
         session.invalidate();
         return new ModelAndView("redirect:/index");
+    }
+
+    @RequestMapping(value = "/accounts/profile")
+    public ModelAndView profile(User updateUser) {
+        if (updateUser.getEmail() == null) {
+            return new ModelAndView("/user/accounts/profile");
+        }
+        userService.updateUser(updateUser, updateUser.getEmail());
+        User query = new User();
+        query.setEmail(updateUser.getEmail());
+        List<User> userList = userService.getUserByQuery(query);
+        WebInitialize webInitialize = new WebInitialize().invoke();
+        webInitialize.getSession().setAttribute(CommonConstants.USER_ATTRIBUTE, userList.get(0));
+        return new ModelAndView("redirect:/accounts/profile?"
+                .concat(ResultMsg.successMsg("更新成功").asUrlParams()));
+
+    }
+
+    @RequestMapping(value = "/accounts/changePassword")
+    public ModelAndView setPwd(@RequestParam Map<String, Object> inParam) {
+        ModelAndView modelAndView = new ModelAndView();
+        String email = inParam.get("email").toString();
+        String password = inParam.get("password").toString();
+        String newPassword = inParam.get("newPassword").toString();
+        String confirmPassword = inParam.get("confirmPassword").toString();
+        User user = userService.auth(email, password);
+        if (user == null || !newPassword.equals(confirmPassword)) {
+            modelAndView.setViewName("redirect:/accounts/profile?"
+                    .concat(ResultMsg.errorMsg("密码错误").asUrlParams()));
+            return modelAndView;
+        }
+        User updateUser = new User();
+        updateUser.setPasswd(HashUtils.encryPassword(newPassword));
+        userService.updateUser(updateUser, email);
+        modelAndView.setViewName("redirect:/accounts/profile?"
+                .concat(ResultMsg.successMsg("更新成功").asUrlParams()));
+        return modelAndView;
     }
 }
 

@@ -23,4 +23,5 @@ public interface UserMapper {
 
     List<User> query(User user);
 
+    int update(User updateUser);
 }
