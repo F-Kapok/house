@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ public class MailServiceImpl implements MailService {
             .expireAfterAccess(15, TimeUnit.MINUTES)
             .removalListener(new RemovalListener<String, String>() {
                 @Override
-                public void onRemoval(RemovalNotification<String, String> notification) {
+                public void onRemoval(@Nonnull RemovalNotification<String, String> notification) {
                     String email = notification.getValue();
                     User user = new User();
                     user.setEmail(email);
