@@ -2,6 +2,8 @@ package com.fans.mapper;
 
 import com.fans.model.Community;
 
+import java.util.List;
+
 public interface CommunityMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface CommunityMapper {
     int updateByPrimaryKeySelective(Community record);
 
     int updateByPrimaryKey(Community record);
+
+    List<Community> selectCommunity(Community community);
 }
