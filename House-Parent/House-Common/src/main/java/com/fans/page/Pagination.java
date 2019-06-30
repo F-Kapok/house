@@ -27,7 +27,7 @@ public class Pagination {
         this.pageSize = pageSize;
         this.totalCount = totalCount;
         for (int i = 0; i < pageNum; i++) {
-            pages.add(i);
+            pages.add(i + 1);
         }
         Long pageCount = totalCount / pageSize + ((totalCount % pageSize == 0) ? 0 : 1);
         if (pageCount > pageNum) {

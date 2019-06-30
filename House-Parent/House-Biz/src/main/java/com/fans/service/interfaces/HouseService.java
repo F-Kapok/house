@@ -1,6 +1,8 @@
 package com.fans.service.interfaces;
 
 import com.fans.model.House;
+import com.fans.model.HouseUser;
+import com.fans.model.UserMsg;
 import com.fans.page.PageData;
 import com.fans.page.PageParams;
 
@@ -14,4 +16,10 @@ import com.fans.page.PageParams;
 public interface HouseService {
 
     PageData<House> queryHouse(House query, PageParams build);
+
+    House queryHouseById(Long id);
+
+    void addUserMsg(UserMsg userMsg);
+
+    HouseUser getHouseUser(Long id);
 }

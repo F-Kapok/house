@@ -56,13 +56,19 @@
         from house
         <include refid="houseCondition"/>
     </select>
+    <select id="selectSaleHouseUser" resultType="com.fans.model.HouseUser">
+        select id,house_id,user_id,create_time,type
+        from house_user
+        where house_id = #{id} and  type = 1
+        limit 1
+    </select>
     <sql id="houseCondition">
         <where>
             <if test="house.id != null and house.id != 0">
                 and id = #{house.id}
             </if>
             <if test="house.type != null and house.type != ''">
-                and type={house.type}
+                and type=#{house.type}
             </if>
             <if test="house.name != null and house.name != ''">
                 <bind name="pattern" value="'%' + house.name + '%'"/>
@@ -208,6 +214,21 @@
                 #{state,jdbcType=BIT},
             </if>
         </trim>
+    </insert>
+    <insert id="insertUserMsg">
+        insert into house_msg(
+        msg,
+        create_time,
+        user_name,
+        house_id,
+        agent_id
+        )value (
+        #{msg},
+        #{create_time},
+        #{user_name},
+        #{house_id},
+        #{agent_id}
+        )
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.fans.model.House">
         update house

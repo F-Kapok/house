@@ -1,6 +1,8 @@
 package com.fans.mapper;
 
 import com.fans.model.House;
+import com.fans.model.HouseUser;
+import com.fans.model.UserMsg;
 import com.fans.page.PageParams;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,4 +26,8 @@ public interface HouseMapper {
     List<House> selectPageHouse(@Param(value = "house") House house, @Param(value = "pageParams") PageParams pageParams);
 
     Long selectPageCount(@Param("house") House house);
+
+    int insertUserMsg(@Param("userMsg") UserMsg userMsg);
+
+    HouseUser selectSaleHouseUser(Long id);
 }
