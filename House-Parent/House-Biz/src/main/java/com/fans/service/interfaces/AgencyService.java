@@ -2,6 +2,8 @@ package com.fans.service.interfaces;
 
 import com.fans.model.Agency;
 import com.fans.model.User;
+import com.fans.page.PageData;
+import com.fans.page.PageParams;
 
 import java.util.List;
 
@@ -17,4 +19,6 @@ public interface AgencyService {
     User getAgentDetail(Long userId);
 
     List<Agency> getAllAgency();
+
+    PageData<User> getAllAgent(PageParams build);
 }

@@ -3,6 +3,7 @@ package com.fans.service.impl;
 import com.fans.mapper.AgencyMapper;
 import com.fans.model.Agency;
 import com.fans.model.User;
+import com.fans.page.PageData;
 import com.fans.page.PageParams;
 import com.fans.service.interfaces.AgencyService;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,5 +46,19 @@ public class AgencyServiceImpl implements AgencyService {
     @Override
     public List<Agency> getAllAgency() {
         return agencyMapper.select(new Agency());
+    }
+
+    @Override
+    public PageData<User> getAllAgent(PageParams build) {
+        List<User> agents = agencyMapper.selectAgency(new User(), build);
+        setImg(agents);
+        Long count = agencyMapper.selectAgentCount(new User());
+        return PageData.buildPage(agents, count, build.getPageSize(), build.getPageNum());
+    }
+
+    private void setImg(List<User> agents) {
+        agents.forEach(user -> {
+            user.setAvatar(filePrefix + user.getAvatar());
+        });
     }
 }
