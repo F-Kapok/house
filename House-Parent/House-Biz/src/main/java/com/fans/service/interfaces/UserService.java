@@ -22,4 +22,6 @@ public interface UserService {
     void updateUser(User updateUser, String email);
 
     List<User> getUserByQuery(User query);
+
+    User getUserById(Long id);
 }

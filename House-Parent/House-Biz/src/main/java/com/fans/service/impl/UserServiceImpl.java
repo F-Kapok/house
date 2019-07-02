@@ -81,4 +81,15 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    @Override
+    public User getUserById(Long id) {
+        User queryUser = new User();
+        queryUser.setId(id);
+        List<User> users = getUserByQuery(queryUser);
+        if (!users.isEmpty()) {
+            return users.get(0);
+        }
+        return null;
+    }
+
 }
