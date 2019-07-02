@@ -31,7 +31,7 @@
         from house
         where id = #{id,jdbcType=BIGINT}
     </select>
-    <select id="selectPageHouse" resultType="com.fans.model.House">
+    <select id="selectPageHouse" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from house
@@ -57,7 +57,7 @@
         <include refid="houseCondition"/>
     </select>
     <select id="selectSaleHouseUser" resultType="com.fans.model.HouseUser">
-        select id,house_id,user_id,create_time,type
+        select id,house_id as houseId,user_id as userId,create_time as createTime,type
         from house_user
         where house_id = #{id} and  type = 1
         limit 1

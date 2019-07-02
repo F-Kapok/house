@@ -78,7 +78,7 @@ public class HouseServiceImpl implements HouseService {
         return houseMapper.selectSaleHouseUser(id);
     }
 
-    private List<House> queryAndSetImage(House query, PageParams pageParams) {
+    public List<House> queryAndSetImage(House query, PageParams pageParams) {
         List<House> houses = houseMapper.selectPageHouse(query, pageParams);
         houses.forEach(house -> {
             house.setFirstImg(filePrefix + house.getFirstImg());

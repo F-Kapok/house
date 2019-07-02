@@ -3,6 +3,7 @@ package com.fans.controller;
 import com.fans.common.CommonConstants;
 import com.fans.model.User;
 import com.fans.result.ResultMsg;
+import com.fans.service.interfaces.AgencyService;
 import com.fans.service.interfaces.UserService;
 import com.fans.utils.HashUtils;
 import com.fans.utils.WebInitialize;
@@ -34,10 +35,14 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "agencyService")
+    private AgencyService agencyService;
+
     @RequestMapping(value = "/accounts/register")
     public ModelAndView accountsRegister(User user, ModelMap modelMap) {
         if (user == null || user.getName() == null) {
-            return new ModelAndView("/user/accounts/register");
+            modelMap.put("agencyList", agencyService.getAllAgency());
+            return new ModelAndView("/user/accounts/register", modelMap);
         }
 
         // 用户验证

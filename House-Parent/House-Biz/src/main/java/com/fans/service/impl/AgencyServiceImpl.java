@@ -1,6 +1,7 @@
 package com.fans.service.impl;
 
 import com.fans.mapper.AgencyMapper;
+import com.fans.model.Agency;
 import com.fans.model.User;
 import com.fans.page.PageParams;
 import com.fans.service.interfaces.AgencyService;
@@ -39,5 +40,10 @@ public class AgencyServiceImpl implements AgencyService {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<Agency> getAllAgency() {
+        return agencyMapper.select(new Agency());
     }
 }

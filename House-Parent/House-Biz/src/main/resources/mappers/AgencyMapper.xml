@@ -39,6 +39,19 @@
             limit #{pageParams.limit}
         </if>
     </select>
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from agency
+        <where>
+            <if test="id != null and id != 0">
+                and id = #{id}
+            </if>
+            <if test="name != null and name !='' ">
+                and email = #{email}
+            </if>
+        </where>
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from agency
     where id = #{id,jdbcType=INTEGER}

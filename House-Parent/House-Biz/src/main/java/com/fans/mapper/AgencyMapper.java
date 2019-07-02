@@ -23,4 +23,6 @@ public interface AgencyMapper {
     int updateByPrimaryKey(Agency record);
 
     List<User> selectAgency(@Param("user") User user, @Param("pageParams") PageParams pageParams);
+
+    List<Agency> select(Agency agency);
 }
